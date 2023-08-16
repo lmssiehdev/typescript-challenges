@@ -24,7 +24,9 @@
 
 type First<T extends any[]> = T extends [] ? never : T[0];
 
-const a: First<[3, 2, 1]>;
+type FirstTwo<T extends unknown[]> = T extends [infer First, ...infer Last]
+  ? First
+  : never;
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from "@type-challenges/utils";
@@ -34,6 +36,13 @@ type cases = [
   Expect<Equal<First<[() => 123, { a: string }]>, () => 123>>,
   Expect<Equal<First<[]>, never>>,
   Expect<Equal<First<[undefined]>, undefined>>
+];
+
+type casesTwo = [
+  Expect<Equal<FirstTwo<[3, 2, 1]>, 3>>,
+  Expect<Equal<FirstTwo<[() => 123, { a: string }]>, () => 123>>,
+  Expect<Equal<FirstTwo<[]>, never>>,
+  Expect<Equal<FirstTwo<[undefined]>, undefined>>
 ];
 
 type errors = [
